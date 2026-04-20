@@ -25,16 +25,27 @@ When connected to GHL via MCP, this skill provides direct CRM automation capabil
 3. Select scopes: contacts (r/w), opportunities (r/w), calendars (r/w), conversations (r/w), workflows (r), users (r), locations (r), tags (r/w), custom fields (r/w), custom values (r/w)
 4. Generate and copy the token
 
-5. Add to Claude Code settings (`.claude/settings.json`):
+5. Add to Claude Code via CLI (recommended — stores token in home dir, never in git):
+
+```bash
+claude mcp add \
+  --transport http \
+  --scope user \
+  ghl \
+  https://services.leadconnectorhq.com/mcp/ \
+  --header "Authorization: Bearer YOUR_PIT_TOKEN"
+```
+
+Or for Claude Desktop (Mac), edit `~/Library/Application Support/Claude/claude_desktop_config.json` using mcp-remote as a bridge:
 
 ```json
 {
   "mcpServers": {
     "ghl": {
-      "type": "streamable-http",
-      "url": "https://services.leadconnectorhq.com/mcp/",
-      "headers": {
-        "Authorization": "Bearer YOUR_PIT_TOKEN"
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://services.leadconnectorhq.com/mcp/", "--header", "Authorization:${AUTH_TOKEN}"],
+      "env": {
+        "AUTH_TOKEN": "Bearer YOUR_PIT_TOKEN"
       }
     }
   }
